@@ -2,10 +2,10 @@
 
    一般情况下我们使用爬虫更多的应该是爬数据或者图片吧,今天在这里和大家分享一下关于使用爬虫技术来进行视频下载的方法,不仅可以方便的下载一些体积小的视频,针对大容量的视频下载同样试用。
 ![](https://img2018.cnblogs.com/blog/736399/201902/736399-20190228212836700-1955556009.jpg)
-###先上个🌰
-####requests模块的iter_content方法
+### 先上个🌰
+#### requests模块的iter_content方法
 这里我们使用的是python的requests模块作为例子,需要获取文本的时候我们会使用response.text获取文本信息,使用response.content获取字节流,比如下载图片保存到一个文件,而对于大个的文件我们就要采取分块读取的方式了,
-####requests.get方法的stream
+#### requests.get方法的stream
 第一步，我们需要设置requests.get的stream参数为True。
 默认情况下是stream的值为false，它会立即开始下载文件并存放到内存当中，倘若文件过大就会导致内存不足的情况．
 当把get函数的stream参数设置成True时，它不会立即开始下载，当你使用iter_content或iter_lines遍历内容或访问内容属性时才开始下载。需要注意一点：文件没有下载之前，它也需要保持连接。
@@ -31,11 +31,11 @@ for chunk in r.iter_content(chunk_size=512):
 range是请求资源的部分内容（不包括响应头的大小），单位是byte，即字节，从0开始.
 如果服务器能够正常响应的话，服务器会返回 206 Partial Content 的状态码及说明.
 如果不能处理这种Range的话，就会返回整个资源以及响应状态码为 200 OK .（这个要注意，要分段下载时，要先判断这个）
-####Range请求头格式
+#### Range请求头格式
 ```
 Range: bytes=start-end
 ```
-####Range头域  
+#### Range头域  
 Range头域可以请求实体的一个或者多个子范围。例如，  
 表示头500个字节：bytes=0-499  
 表示第二个500字节：bytes=500-999  
@@ -101,7 +101,7 @@ download_from_url(url, "夏目友人帐第一集.mp4")
 可以发现这个视频被成功的下载下来，怎么样激不动激不动啊。
 ![](https://img2018.cnblogs.com/blog/736399/201902/736399-20190228213140324-2028911776.gif)
 对于单文件的下载我们就完成,但是对于夏目友人帐这个动漫来说不只有一集,如果我们下载一个系列的话,我们就得使用并发了,这里我使用aiohttp把上面的代码改成并发的版本。
-###使用aiohttp进行并发下载
+### 使用aiohttp进行并发下载
 ```
 import aiohttp
 import asyncio
@@ -144,7 +144,7 @@ async def async_download_from_url(url, dst):
 ```
 上面的代码功能和我们的同步代码一样的，不同的是这里是异步的。
 ![](https://img2018.cnblogs.com/blog/736399/201902/736399-20190228212820538-1650126491.jpg)
-###并发下载演示
+### 并发下载演示
 我们首先要拿到MP4的链接,然后进行下面的代码即可
 ```
          task = [asyncio.ensure_future(async_download_from_url(url, f"{i}.mp4")) for i in range(1, 12)]
